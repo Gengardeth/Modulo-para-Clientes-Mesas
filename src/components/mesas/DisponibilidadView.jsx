@@ -9,10 +9,10 @@ export default function DisponibilidadView({ mesas, reservas, clientes, onReserv
   const [clienteId, setClienteId] = useState("");
 
   const libres = useMemo(() => {
-    const ocupadasPorHora = reservas[hora] || new Set();
+    const ocupadasPorHora = reservas[hora] || [];
     return mesas.filter((m) => {
       const libreAhora = m.estado === "libre" && m.clienteId == null;
-      const noReservadaEnHora = !ocupadasPorHora.has(m.id);
+      const noReservadaEnHora = !ocupadasPorHora.some(r => r.mesaId === m.id);
       const cumpleZona = zona === "todos" ? true : m.zona === zona;
       const cumpleCapacidad = m.capacidad >= Number(personas || 0);
       return libreAhora && noReservadaEnHora && cumpleZona && cumpleCapacidad;
@@ -79,7 +79,7 @@ export default function DisponibilidadView({ mesas, reservas, clientes, onReserv
                     <span className="font-semibold text-gray-900">{m.capacidad} pax</span>
                   </div>
                 </div>
-                <button disabled={!clienteId} onClick={()=>onReservar(m.id, Number(clienteId))} className={`w-full text-center rounded-lg px-4 py-2.5 text-sm font-semibold transition ${clienteId?"bg-blue-500 text-white hover:bg-blue-600":"bg-gray-200 text-gray-500 cursor-not-allowed"}`}>Reservar a {hora}</button>
+                <button disabled={!clienteId} onClick={()=>onReservar(m.id, Number(clienteId), hora)} className={`w-full text-center rounded-lg px-4 py-2.5 text-sm font-semibold transition ${clienteId?"bg-blue-500 text-white hover:bg-blue-600":"bg-gray-200 text-gray-500 cursor-not-allowed"}`}>Reservar a {hora}</button>
               </div>
             ))}
           </div>

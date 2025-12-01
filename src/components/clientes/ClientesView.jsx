@@ -18,9 +18,14 @@ export default function ClientesView({
   });
   const [editando, setEditando] = useState(null);
 
-  const filtrados = clientes.filter((c) =>
-    c.nombre.toLowerCase().includes(busqueda.toLowerCase())
-  );
+  const filtrados = clientes.filter((c) => {
+    const busquedaLower = busqueda.toLowerCase();
+    return (
+      c.nombre.toLowerCase().includes(busquedaLower) ||
+      c.email.toLowerCase().includes(busquedaLower) ||
+      (c.run && c.run.toLowerCase().includes(busquedaLower))
+    );
+  });
 
   const agregar = () => {
     if (!nuevo.nombre.trim()) return;
@@ -65,7 +70,7 @@ export default function ClientesView({
 
         <Input
           type="text"
-          placeholder="Buscar cliente por nombre..."
+          placeholder="Buscar por nombre, RUT o correo..."
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
           containerClass="mb-6"
